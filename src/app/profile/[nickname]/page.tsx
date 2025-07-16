@@ -2,16 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { notFound } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import ProfileCard from '@/app/components/ProfileCard';
 import Particles from '@/app/components/Particles';
+import React from 'react';
 
 type Params = {
   nickname: string;
 };
 
 type Props = {
-  params: Params;
+  params: Promise<Params>;
 };
 
 type User = {
@@ -23,7 +24,9 @@ type User = {
   avatar_url?: string;
 };
 
-export default function ProfilePage({ params }: Props) {
+export default function ProfilePage({ params: paramsPromise }: Props) {
+  const { nickname } = React.use(paramsPromise); // 👈 params endi Promise sifatida unwrap qilinmoqda
+
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -32,7 +35,7 @@ export default function ProfilePage({ params }: Props) {
       const { data, error } = await supabase
         .from('users')
         .select('*')
-        .eq('nickname', params.nickname.toLowerCase())
+        .eq('nickname', nickname.toLowerCase())
         .single();
 
       if (error || !data) {
@@ -45,9 +48,9 @@ export default function ProfilePage({ params }: Props) {
     };
 
     getUser();
-  }, [params.nickname]);
+  }, [nickname]);
 
-  if (loading) return <div className="text-white text-center mt-20">Yuklanmoqda...</div>;
+  if (loading) return <div className="text-white text-center mt-20">⏳ Yuklanmoqda...</div>;
   if (!user) return notFound();
 
   return (
@@ -69,12 +72,12 @@ export default function ProfilePage({ params }: Props) {
       {/* 👤 Profile card */}
       <div className="relative z-10 p-6">
         <ProfileCard
-          name={user.fullname || user.name}
+          name={user.fullname || user.name || 'No Name'}
           title="School 21 Talabasi"
           handle={user.nickname}
           status={`Tribe: ${user.tribe}`}
           contactText={user.phone}
-          avatarUrl={user.avatar_url || ''}
+          avatarUrl={user.avatar_url || '/default-avatar.jpg'}
           showUserInfo={true}
           enableTilt={true}
           onContactClick={() => window.open(`tel:${user.phone}`, '_blank')}

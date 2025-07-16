@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { supabase } from "@/lib/supabaseClient";
 
 type User = {
   id: string;
@@ -17,9 +18,9 @@ export default function UsersPage() {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const { data, error } = await supabase.from('users').select('*');
+      const { data, error } = await supabase.from("users").select("*");
       if (error) {
-        console.error('Xatolik:', error.message);
+        console.error("Xatolik:", error.message);
       } else {
         setUsers(data || []);
       }
@@ -36,13 +37,17 @@ export default function UsersPage() {
             key={user.id}
             className="border p-4 rounded-xl shadow-md text-center bg-white text-black"
           >
-            <img
-              src={user.avatar_url || '/default-avatar.jpg'}
-              alt={user.nickname}
-              className="w-24 h-24 mx-auto rounded-full object-cover"
-            />
-            <h2 className="text-xl mt-2 font-semibold">{user.nickname}</h2>
-            <p className="text-gray-700">{user.name || user.name}</p>
+            <div className="w-24 h-24 mx-auto relative rounded-full overflow-hidden">
+              <Image
+                src={user.avatar_url || "/default-avatar.jpg"}
+                alt={user.nickname}
+                fill
+                sizes="96px" // 👈 rasm o‘lchami bilan mos
+                className="object-cover"
+              />
+            </div>
+            <h2 className="text-xl mt-4 font-semibold">{user.nickname}</h2>
+            <p className="text-gray-700">{user.name || "Ism yoʻq"}</p>
             <p className="text-sm text-gray-500">{user.phone}</p>
             <p className="text-sm text-gray-400">{user.tribe}</p>
           </div>
