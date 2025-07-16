@@ -1,3 +1,4 @@
+// page.tsx — src/app/profile/[nickname]/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -5,7 +6,6 @@ import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import ProfileCard from '@/app/components/ProfileCard';
 import Particles from '@/app/components/Particles';
-import React from 'react';
 
 type Props = {
   params: {
@@ -73,7 +73,7 @@ export default function ProfilePage({ params }: Props) {
           handle={user.nickname}
           status={`Tribe: ${user.tribe}`}
           contactText={user.phone}
-          avatarUrl={user.avatar_url || '/default-avatar.jpg'}
+          avatarUrl={user.avatar_url || '/school21.jpg'}
           showUserInfo={true}
           enableTilt={true}
           onContactClick={() => window.open(`tel:${user.phone}`, '_blank')}
