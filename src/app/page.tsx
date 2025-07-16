@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
@@ -8,6 +8,7 @@ import Particles from "@/app/components/Particles";
 import TrueFocus from "./components/TrueFocus";
 import { supabase } from "@/lib/supabase";
 import AddUserModal from "./components/AddUserModal";
+import { UserPlus } from "lucide-react";
 
 type User = {
   nickname: string;
@@ -82,8 +83,9 @@ export default function HomePage() {
         {/* Add User Modal Button */}
         <button
           onClick={() => setShowModal(true)}
-          className="fixed bottom-5 right-5 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl shadow-lg"
+          className="fixed bottom-5 right-5 z-50 flex items-center gap-2 bg-gradient-to-br from-green-400 via-green-500 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold px-5 py-3 rounded-2xl shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-105 active:scale-95"
         >
+          <UserPlus className="w-5 h-5" />
           Add Me
         </button>
         {showModal && <AddUserModal onClose={() => setShowModal(false)} />}
@@ -122,8 +124,10 @@ export default function HomePage() {
               <h2 className="text-xl font-semibold mb-1 text-white drop-shadow-lg">
                 {user.nickname}
               </h2>
-              <p className="text-sm text-white/80">{user.name}</p>
-              {user.tribe && <p className="text-xs text-white/60">{user.tribe}</p>}
+              {/* <p className="text-sm text-white/80">{user.name}</p>
+              {user.tribe && (
+                <p className="text-xs text-white/60">{user.tribe}</p>
+              )} */}
             </Link>
           ))}
         </div>

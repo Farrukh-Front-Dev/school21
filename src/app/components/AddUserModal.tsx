@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { Loader2, UserPlus, X } from 'lucide-react';
 
-type Props = {
+interface Props {
   onClose: () => void;
-};
+}
 
 export default function AddUserModal({ onClose }: Props) {
   const [formData, setFormData] = useState({
@@ -32,12 +33,7 @@ export default function AddUserModal({ onClose }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!file) {
-      alert('Iltimos, rasm tanlang.');
-      return;
-    }
-
+    if (!file) return alert('Iltimos, rasm tanlang.');
     setLoading(true);
 
     try {
@@ -48,69 +44,62 @@ export default function AddUserModal({ onClose }: Props) {
         .from('avatars')
         .upload(fileName, file);
 
-      if (uploadError) {
-        console.error(uploadError);
-        throw new Error('Rasm yuklanmadi: ' + uploadError.message);
-      }
+      if (uploadError) throw new Error('Rasm yuklanmadi.');
 
       const avatar_url = `https://rdwloaqrgzbczanwfqso.supabase.co/storage/v1/object/public/avatars/${fileName}`;
 
       const { error: insertError } = await supabase.from('users').insert([
-        {
-          ...formData,
-          avatar_url,
-        },
+        { ...formData, avatar_url },
       ]);
 
-      if (insertError) {
-        console.error(insertError);
-        throw new Error('Ma’lumotlar bazasiga yozilmadi: ' + insertError.message);
-      }
+      if (insertError) throw new Error('Maʼlumotlar bazasiga yozilmadi.');
 
-      alert('✅ Ma’lumotlar saqlandi!');
+      alert('✅ Maʼlumotlar saqlandi!');
       onClose();
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        alert('❌ Xatolik: ' + err.message);
-      } else {
-        alert('❌ Xatolik: Nomaʼlum xato yuz berdi.');
-      }
+    } catch (err) {
+      alert(`❌ Xatolik: ${(err as Error).message}`);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-xl w-[90%] max-w-md shadow-xl text-black">
-        <h2 className="text-2xl font-bold mb-4 text-center">
-          O‘z ma’lumotlaringizni kiriting
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center">
+      <div className="bg-white text-gray-800 w-full max-w-lg rounded-2xl p-6 shadow-2xl relative animate-fade-in">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-500 hover:text-black"
+        >
+          <X className="w-5 h-5" />
+        </button>
+        <h2 className="text-2xl font-bold text-center mb-6 flex items-center justify-center gap-2">
+          <UserPlus className="w-6 h-6 text-green-600" /> Yangi foydalanuvchi
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             name="nickname"
-            placeholder="Nickname (unikal)"
-            className="w-full px-4 py-2 border rounded-md focus:outline-none"
+            placeholder="@nickname (unikal)"
+            className="input"
             onChange={handleChange}
             required
           />
           <input
             name="name"
             placeholder="To‘liq ism"
-            className="w-full px-4 py-2 border rounded-md focus:outline-none"
+            className="input"
             onChange={handleChange}
             required
           />
           <input
             name="phone"
             placeholder="Telefon raqam"
-            className="w-full px-4 py-2 border rounded-md focus:outline-none"
+            className="input"
             onChange={handleChange}
             required
           />
           <select
             name="tribe"
-            className="w-full px-4 py-2 border rounded-md focus:outline-none"
+            className="input"
             onChange={handleChange}
             required
           >
@@ -124,24 +113,23 @@ export default function AddUserModal({ onClose }: Props) {
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="w-full"
+            className="input cursor-pointer"
             required
           />
-
-          <div className="flex justify-end gap-4 pt-4">
+          <div className="flex justify-end gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="text-gray-600 hover:underline"
+              className="text-sm px-4 py-2 rounded-md hover:underline"
             >
               Bekor qilish
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2"
             >
-              {loading ? 'Yuklanmoqda...' : 'Yuborish'}
+              {loading && <Loader2 className="w-4 h-4 animate-spin" />} Yuborish
             </button>
           </div>
         </form>

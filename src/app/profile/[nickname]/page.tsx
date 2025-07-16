@@ -71,9 +71,9 @@ export default function ProfilePage({ params }: Props) {
       <div className="relative z-10 p-6">
         <ProfileCard
           name={user.fullname || user.name || 'No Name'}
-          title="School 21 Talabasi"
+          title="School 21"
           handle={user.nickname}
-          status={`Tribe: ${user.tribe}`}
+          status={`${user.tribe}`}
           contactText={user.phone}
           avatarUrl={user.avatar_url || '/school21.jpg'}
           showUserInfo={true}
