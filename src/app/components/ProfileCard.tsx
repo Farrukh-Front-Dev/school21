@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useEffect, useRef, useCallback, useMemo } from "react";
 import "../globals.css";
 import Image from "next/image";
@@ -99,7 +99,11 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
         "--pointer-y": `${percentY}%`,
         "--background-x": `${adjust(percentX, 0, 100, 35, 65)}%`,
         "--background-y": `${adjust(percentY, 0, 100, 35, 65)}%`,
-        "--pointer-from-center": `${clamp(Math.hypot(percentY - 50, percentX - 50) / 50, 0, 1)}`,
+        "--pointer-from-center": `${clamp(
+          Math.hypot(percentY - 50, percentX - 50) / 50,
+          0,
+          1
+        )}`,
         "--pointer-from-top": `${percentY / 100}`,
         "--pointer-from-left": `${percentX / 100}`,
         "--rotate-x": `${round(-(centerX / 5))}deg`,
@@ -249,10 +253,10 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
         "--icon": iconUrl ? `url(${iconUrl})` : "none",
         "--grain": grainUrl ? `url(${grainUrl})` : "none",
         "--behind-gradient": showBehindGradient
-          ? (behindGradient ?? DEFAULT_BEHIND_GRADIENT)
+          ? behindGradient ?? DEFAULT_BEHIND_GRADIENT
           : "none",
         "--inner-gradient": innerGradient ?? DEFAULT_INNER_GRADIENT,
-      }) as React.CSSProperties,
+      } as React.CSSProperties),
     [iconUrl, grainUrl, showBehindGradient, behindGradient, innerGradient]
   );
 
@@ -270,24 +274,45 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
         <div className="pc-inside">
           <div className="pc-shine" />
           <div className="pc-glare" />
+
+          {/* Avatar va user info */}
           <div className="pc-content pc-avatar-content">
-            <Image
-              className="avatar"
-              src={avatarUrl}
-              alt={`${name || "User"} avatar`}
-              loading="lazy"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.style.display = "none";
+            {/* ✅ Asosiy avatar - konteynerga height belgilangan */}
+            <div
+              className="pc-avatar-container"
+              style={{
+                position: "relative",
+                width: "100%",
+                height: "260px",
+                marginTop: "60px",
               }}
-            />
+            >
+              <Image
+                src={avatarUrl}
+                alt={`${name || "User"} avatar`}
+                loading="lazy"
+                fill
+                style={{ objectFit: "cover" }}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = "none";
+                }}
+              />
+            </div>
+
+            {/* ✅ User info (mini avatar, name, contact button) */}
             {showUserInfo && (
               <div className="pc-user-info">
                 <div className="pc-user-details">
-                  <div className="pc-mini-avatar">
+                  <div
+                    className="pc-mini-avatar"
+                    style={{ position: "relative" }}
+                  >
                     <Image
                       src={miniAvatarUrl || avatarUrl}
                       alt={`${name || "User"} mini avatar`}
+                      fill
+                      style={{ objectFit: "cover", borderRadius: "50%" }}
                       loading="lazy"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
@@ -296,11 +321,13 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
                       }}
                     />
                   </div>
+
                   <div className="pc-user-text">
                     <div className="pc-handle">{handle}</div>
                     <div className="pc-status">{status}</div>
                   </div>
                 </div>
+
                 <button
                   className="pc-contact-btn"
                   onClick={handleContactClick}
@@ -313,6 +340,8 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
               </div>
             )}
           </div>
+
+          {/* Name & Title */}
           <div className="pc-content">
             <div className="pc-details">
               <h3>{name}</h3>

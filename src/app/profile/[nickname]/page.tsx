@@ -1,16 +1,17 @@
-// page.tsx — src/app/profile/[nickname]/page.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import ProfileCard from '@/app/components/ProfileCard';
 import Particles from '@/app/components/Particles';
 
+type Params = {
+  nickname: string;
+};
+
 type Props = {
-  params: {
-    nickname: string;
-  };
+  params: Promise<Params>;
 };
 
 type User = {
@@ -23,7 +24,8 @@ type User = {
 };
 
 export default function ProfilePage({ params }: Props) {
-  const { nickname } = params;
+  // React.use() bilan Promise ni unwrap qilamiz
+  const { nickname } = React.use(params);
 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
