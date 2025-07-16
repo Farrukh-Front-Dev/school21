@@ -7,12 +7,10 @@ import ProfileCard from '@/app/components/ProfileCard';
 import Particles from '@/app/components/Particles';
 import React from 'react';
 
-type Params = {
-  nickname: string;
-};
-
 type Props = {
-  params: Promise<Params>;
+  params: {
+    nickname: string;
+  };
 };
 
 type User = {
@@ -24,8 +22,8 @@ type User = {
   avatar_url?: string;
 };
 
-export default function ProfilePage({ params: paramsPromise }: Props) {
-  const { nickname } = React.use(paramsPromise); // 👈 params endi Promise sifatida unwrap qilinmoqda
+export default function ProfilePage({ params }: Props) {
+  const { nickname } = params;
 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -55,7 +53,6 @@ export default function ProfilePage({ params: paramsPromise }: Props) {
 
   return (
     <div className="relative w-full min-h-screen bg-black flex items-center justify-center overflow-hidden">
-      {/* 🌌 Background */}
       <div className="absolute top-0 left-0 w-full h-full z-0">
         <Particles
           particleColors={['#0FFF10', '#0FFF10']}
@@ -69,7 +66,6 @@ export default function ProfilePage({ params: paramsPromise }: Props) {
         />
       </div>
 
-      {/* 👤 Profile card */}
       <div className="relative z-10 p-6">
         <ProfileCard
           name={user.fullname || user.name || 'No Name'}
