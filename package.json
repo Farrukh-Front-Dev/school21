@@ -9,11 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.6.1",
+    "@supabase/supabase-js": "^2.50.5",
+    "@types/antd": "^0.12.32",
+    "antd": "^5.26.4",
     "framer-motion": "^12.23.3",
     "next": "15.3.5",
     "ogl": "^1.0.11",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-hook-form": "^7.60.0",
     "react-icons": "^5.5.0"
   },
   "devDependencies": {

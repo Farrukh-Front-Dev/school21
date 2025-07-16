@@ -3,26 +3,34 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
-// Icon kutubxonasini o'rnatib foydalanamiz
-import { FiSearch } from 'react-icons/fi';
+import { FiSearch } from "react-icons/fi";
+import Particles from "@/app/components/Particles";
+import TrueFocus from "./components/TrueFocus"; // 👈 Fon uchun qo‘shiladi
+import { supabase } from "@/lib/supabaseClient";
+import AddUserModal from "./components/AddUserModal"; // Modal qo‘shish uchun
 
 type User = {
   nickname: string;
   name: string;
   phone: string;
   photo: string;
+  tribe?: string;
 };
 
 async function getUsers(): Promise<User[]> {
-  const res = await fetch("/data/users.json");
-  return res.json();
+  const { data, error } = await supabase.from("users").select("*");
+  if (error) {
+    console.error("Supabase error:", error.message);
+    return [];
+  }
+  return data as User[];
 }
 
 export default function HomePage() {
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState<User[]>([]);
   const [filtered, setFiltered] = useState<User[]>([]);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     getUsers().then((data) => {
@@ -43,21 +51,51 @@ export default function HomePage() {
   }, [search, users]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 to-blue-900 text-white px-6 py-12 font-sans">
-      <div className="max-w-7xl mx-auto">
+    <div className="relative min-h-screen text-white overflow-hidden">
+      {/* 🔵 Particle fon */}
+      <div className="absolute inset-0 -z-10 bg-black">
+        <Particles
+          particleColors={["#0FFF20", "#0FFF19"]}
+          particleCount={400}
+          particleSpread={10}
+          speed={0.3}
+          particleBaseSize={80}
+          moveParticlesOnHover={true}
+          alphaParticles={false}
+          disableRotation={false}
+        />
+      </div>
+
+      <div className="max-w-screen-xl mx-auto px-4 py-10">
         {/* Title */}
-        <h1 className="text-5xl md:text-6xl font-extrabold mb-8 text-center drop-shadow-lg text-gradient">
-          School21 Directory
-        </h1>
+        {/* Title */}
+        <div className="text-4xl sm:text-5xl font-bold mb-10 text-center drop-shadow-lg">
+          <TrueFocus
+            sentence="School21 Directory"
+            manualMode={false}
+            blurAmount={5}
+            borderColor="green"
+            animationDuration={2}
+            pauseBetweenAnimations={1}
+          />
+        </div>
+        <button
+          onClick={() => setShowModal(true)}
+          className="fixed bottom-5 right-5 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl shadow-lg"
+        >
+          Add Me
+        </button>
+
+        {showModal && <AddUserModal onClose={() => setShowModal(false)} />}
 
         {/* Qidiruv */}
         <div className="relative max-w-3xl mx-auto mb-10">
           <input
             type="text"
-            placeholder="🔍 Qidirish: nickname yoki ism..."
+            placeholder="Qidirish: nickname yoki ism..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-14 pr-4 py-3 rounded-xl shadow-lg bg-white/20 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
+            className="w-full pl-14 pr-4 py-3 rounded-xl shadow-lg bg-white/20 text-white placeholder-white focus:outline-none focus:ring-1 focus:ring-green-400 transition duration-300"
           />
           <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
             <FiSearch className="text-2xl text-white" />
@@ -70,18 +108,19 @@ export default function HomePage() {
             <Link
               key={user.nickname}
               href={`/profile/${user.nickname}`}
-              className="group bg-white/10 backdrop-blur-3xl p-4 rounded-xl shadow-xl border border-white/20 hover:border-blue-500 hover:bg-white/20 transition-all duration-300 flex flex-col items-center hover:scale-105"
+              className="group bg-white/10 backdrop-blur-3xl p-4 rounded-xl shadow-xl border border-white/20 hover:border-green-500 hover:bg-white/20 transition-all duration-300 flex flex-col items-center hover:scale-105"
             >
               <div className="w-24 h-24 mb-4 relative">
                 <Image
-                  src={`/avatars/${user.photo}`}
+                  src={`/avatars/${user.photo || "school21.jpg"}`}
                   alt={user.nickname}
                   fill
-                  className="rounded-full border-4 border-white shadow-lg object-cover"
+                  className="rounded-full border-1 border-green-500 shadow-lg object-cover"
                 />
               </div>
-              <h2 className="text-xl font-semibold mb-2 text-white drop-shadow-lg">{user.nickname}</h2>
-              <p className="text-sm text-gray-300">{user.name}</p>
+              <h2 className="text-xl font-semibold mb-1 text-white drop-shadow-lg">
+                {user.nickname}
+              </h2>
             </Link>
           ))}
         </div>

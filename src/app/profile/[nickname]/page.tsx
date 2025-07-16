@@ -1,8 +1,8 @@
 'use client';
 
-import * as React from 'react';
-import users from '@/../public/data/users.json';
+import { useEffect, useState } from 'react';
 import { notFound } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 import ProfileCard from '@/app/components/ProfileCard';
 import Particles from '@/app/components/Particles';
 
@@ -11,14 +11,43 @@ type Params = {
 };
 
 type Props = {
-  params: Promise<Params>;
+  params: Params;
 };
 
-export default function ProfilePage({ params: paramsPromise }: Props) {
-  const params = React.use(paramsPromise);
-  const nickname = params.nickname.toLowerCase();
+type User = {
+  nickname: string;
+  fullname?: string;
+  name?: string;
+  phone: string;
+  tribe: string;
+  avatar_url?: string;
+};
 
-  const user = users.find((u) => u.nickname.toLowerCase() === nickname);
+export default function ProfilePage({ params }: Props) {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('nickname', params.nickname.toLowerCase())
+        .single();
+
+      if (error || !data) {
+        console.error('User not found:', error?.message);
+        setUser(null);
+      } else {
+        setUser(data);
+      }
+      setLoading(false);
+    };
+
+    getUser();
+  }, [params.nickname]);
+
+  if (loading) return <div className="text-white text-center mt-20">Yuklanmoqda...</div>;
   if (!user) return notFound();
 
   return (
@@ -40,12 +69,12 @@ export default function ProfilePage({ params: paramsPromise }: Props) {
       {/* 👤 Profile card */}
       <div className="relative z-10 p-6">
         <ProfileCard
-          name={user.name}
+          name={user.fullname || user.name}
           title="School 21 Talabasi"
           handle={user.nickname}
-          status="Tribe"
+          status={`Tribe: ${user.tribe}`}
           contactText={user.phone}
-          avatarUrl={`/avatars/${user.photo}`}
+          avatarUrl={user.avatar_url || ''}
           showUserInfo={true}
           enableTilt={true}
           onContactClick={() => window.open(`tel:${user.phone}`, '_blank')}
