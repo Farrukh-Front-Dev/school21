@@ -13,6 +13,7 @@
     "@supabase/supabase-js": "^2.50.5",
     "@types/antd": "^0.12.32",
     "antd": "^5.26.4",
+    "browser-image-compression": "^2.0.2",
     "framer-motion": "^12.23.3",
     "lucide-react": "^0.525.0",
     "next": "15.3.5",
@@ -20,6 +21,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.60.0",
+    "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0"
   },
   "devDependencies": {
