@@ -14,9 +14,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "School21 Directory",
-  description: "A directory of School 21 students",
+  title: "Studentlink",
+  description: "Created by rrangesi",
+  icons: {
+    icon: "/favicon.png", // bu `public/` ichida bo‘lishi kerak
+  },
 };
+
 
 export default function RootLayout({
   children,

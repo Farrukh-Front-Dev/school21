@@ -70,8 +70,9 @@ export default function ProfilePage({ params }: Props) {
 
       <div className="relative z-10 p-6">
         <ProfileCard
-          name={user.fullname || user.name || 'No Name'}
-          title="School 21"
+          name={user.name || 'No Name'}
+          // nameClassName="!text-blue-600 text-lg font-semibold"
+          title=""
           handle={user.nickname}
           status={`${user.tribe}`}
           contactText={user.phone}

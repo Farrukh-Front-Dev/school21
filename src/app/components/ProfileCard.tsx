@@ -14,6 +14,7 @@ interface ProfileCardProps {
   enableTilt?: boolean;
   miniAvatarUrl?: string;
   name?: string;
+  nameClassName?: string;
   title?: string;
   handle?: string;
   status?: string;
@@ -283,8 +284,8 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
               style={{
                 position: "relative",
                 width: "100%",
-                height: "260px",
-                marginTop: "60px",
+                height: "100%",
+                // marginTop: "60px",
               }}
             >
               <Image
@@ -344,7 +345,7 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
           {/* Name & Title */}
           <div className="pc-content">
             <div className="pc-details">
-              <h3>{name}</h3>
+              <h3 className={className}>{name}</h3>
               <p>{title}</p>
             </div>
           </div>
