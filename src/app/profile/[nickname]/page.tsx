@@ -24,9 +24,7 @@ type User = {
 };
 
 export default function ProfilePage({ params }: Props) {
-  // React.use() bilan Promise ni unwrap qilamiz
   const { nickname } = React.use(params);
-
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -54,7 +52,8 @@ export default function ProfilePage({ params }: Props) {
   if (!user) return notFound();
 
   return (
-    <div className="relative w-full min-h-screen bg-black flex items-center justify-center overflow-hidden">
+    <div className="relative w-full min-h-screen bg-black overflow-hidden">
+      {/* Particles Background */}
       <div className="absolute top-0 left-0 w-full h-full z-0">
         <Particles
           particleColors={['#0FFF10', '#0FFF10']}
@@ -68,10 +67,10 @@ export default function ProfilePage({ params }: Props) {
         />
       </div>
 
-      <div className="relative z-10 p-6">
+      {/* Scrollable Content */}
+      <div className="relative z-10 w-full min-h-screen overflow-y-auto flex items-center justify-center px-4 py-10 sm:py-16">
         <ProfileCard
           name={user.name || 'No Name'}
-          // nameClassName="!text-blue-600 text-lg font-semibold"
           title=""
           handle={user.nickname}
           status={`${user.tribe}`}
