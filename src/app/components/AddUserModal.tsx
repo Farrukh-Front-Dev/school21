@@ -175,7 +175,7 @@ export default function AddUserModal({ onClose }: Props) {
             <option className='bg-purple-600' value="HUMO">HUMO</option>
             <option className='bg-yellow-500' value="TUYA">TUYA</option>
             <option className='bg-red-500' value="LOCHIN">LOCHIN</option>
-            <option className='bg-green-500' value="BORI">BORI</option>
+            <option className='bg-green-500' value="BORI">BO{'\u02BB'}RI</option>
           </select>
 
           {/* File input */}

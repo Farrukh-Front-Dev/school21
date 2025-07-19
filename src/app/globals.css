@@ -497,3 +497,60 @@
   border: 1px solid #ccc;
 }
 
+/* loadingga animatsiya */
+@keyframes spin-slow {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 10s linear infinite;
+  }
+
+  @keyframes spin-medium {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin-medium {
+    animation: spin-medium 5s linear infinite;
+  }
+
+
+
+  @keyframes spin-medium {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin-medium {
+    animation: spin-medium 5s linear infinite;
+  }
+
+  @keyframes pulse-fade {
+    0%, 100% {
+      opacity: 0.2;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+  }
+
+  .animate-pulse-fade {
+    animation: pulse-fade 2s ease-in-out infinite;
+  }
+  

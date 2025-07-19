@@ -9,6 +9,7 @@ import { supabase } from "@/lib/supabase";
 import AddUserModal from "./components/AddUserModal";
 import { UserPlus } from "lucide-react";
 import ResponsiveBackground from "./components/ResponsiveBackground";
+import LoadingHourglass from "./components/LoadingHourGlass"; // NEW animated loader
 
 type User = {
   nickname: string;
@@ -32,11 +33,13 @@ export default function HomePage() {
   const [users, setUsers] = useState<User[]>([]);
   const [filtered, setFiltered] = useState<User[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getUsers().then((data) => {
       setUsers(data);
       setFiltered(data);
+      setLoading(false);
     });
   }, []);
 
@@ -51,12 +54,18 @@ export default function HomePage() {
     );
   }, [search, users]);
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LoadingHourglass />
+      </div>
+    );
+  }
+
   return (
     <div className="relative min-h-screen text-white">
-      {/* Background */}
       <ResponsiveBackground />
 
-      {/* Add User Button (Mobile-friendly fixed) */}
       <button
         onClick={() => setShowModal(true)}
         className="fixed bottom-5 right-5 z-40 flex items-center gap-2 bg-gradient-to-br from-green-400 via-green-500 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold px-5 py-3 rounded-2xl shadow-xl backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95"
@@ -67,7 +76,6 @@ export default function HomePage() {
       {showModal && <AddUserModal onClose={() => setShowModal(false)} />}
 
       <main className="max-w-screen-xl mx-auto px-4 pt-6 pb-20">
-        {/* Sticky Search */}
         <div className="sticky top-2 z-30 backdrop-blur-md rounded-xl shadow-md px-4 py-3 mb-8 max-w-3xl mx-auto">
           <div className="relative">
             <input
@@ -75,6 +83,7 @@ export default function HomePage() {
               placeholder="Qidirish: nickname yoki ism..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              autoFocus
               className="w-full pl-12 pr-4 py-3 rounded-xl bg-white/10 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-green-400 transition duration-300"
             />
             <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
@@ -83,7 +92,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Title */}
         <div className="text-4xl sm:text-5xl font-bold mb-10 text-center drop-shadow-lg">
           <TrueFocus
             sentence="Studentlink Web App"
@@ -95,8 +103,7 @@ export default function HomePage() {
           />
         </div>
 
-        {/* User Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {filtered.map((user, idx) => (
             <Link
               key={user.nickname}
@@ -110,7 +117,10 @@ export default function HomePage() {
                   fill
                   sizes="96px"
                   className="rounded-full border border-green-400 shadow-md object-cover"
-                  priority={idx < 5} // faqat birinchi 5 tasini priority yuklab olish
+                  priority={idx < 5}
+                  // loading="lazy"
+                  placeholder="blur"
+                  blurDataURL="/blur.avif"
                 />
               </div>
               <h2 className="text-lg font-semibold text-white drop-shadow">
